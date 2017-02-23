@@ -10,6 +10,7 @@ import java.util.*;
 
 public class ChatServer implements Runnable{
 
+
     private List<ChatServerThread> clients = new ArrayList<>();
     private ServerSocket serverSocket = null;
     private Thread thread = null;
