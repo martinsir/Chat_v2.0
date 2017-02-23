@@ -4,21 +4,20 @@ import java.net.Socket;
 /**
  * Created by Martin H on 22-02-2017.
  */
+
 public class ChatServerThread extends Thread {
 
     private ChatServer server = null;
-    private Socket socket =null;
-    private int iD = -1;
-    private DataInputStream inStream =null;
-    private DataOutputStream streamOut =null;
-
+    private Socket socket = null;
+    private DataInputStream inStream = null;
+    private DataOutputStream streamOut = null;
+    private String clientName;
 
     public ChatServerThread(ChatServer server, Socket socket) {
 
-        //super();
         this.server = server;
         this.socket = socket;
-        this.iD = socket.getPort();
+        this.clientName = String.valueOf(socket.getPort());
 
     } // END ChatServerThread
 
@@ -28,24 +27,40 @@ public class ChatServerThread extends Thread {
             streamOut.writeUTF(message);
             streamOut.flush();
 
-        }catch (IOException ioe){
-            System.err.println(iD+"ERR sending: "+ioe.getMessage());
+        } catch (IOException ioe) {
+            System.err.println(clientName + "ERR sending: " + ioe.getMessage());
         }
     } // END send()
 
     public void run() {
-        System.out.println("Server Thread "+iD+" running.");
+        System.out.println("Server Thread " + clientName + " running.");
         while (true) {
             try {
-                server.handle(iD,inStream.readUTF());
-            }catch (IOException ioe) {
-                System.err.println(iD+" ERR reading: "+ioe.getMessage());
+                String input = inStream.readUTF(); // message from client
+                // check if its a command
+                if (input.startsWith("username#")) {
+                    this.clientName = input.replace("username#", "");
+                    server.sendOnlineUsers();
+                    System.out.println("Client is now known as " + clientName);
+                } else {
+                    server.handle(clientName, input);
+                }
+                if (input.startsWith("QUIT#")) {///////////////////////
+                    //socket.sendUrgentData(Integer.parseInt(input));
+                    input.replace("QUIT#", " Logging off"); /////////////
+                }
+            } catch (IOException ioe) {
+                System.err.println(clientName + " ERR reading: " + ioe.getMessage());
                 System.exit(-1);
             }
         }
     }// END run()
 
-    public void open() throws IOException{
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void open() throws IOException {
         inStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
     }
