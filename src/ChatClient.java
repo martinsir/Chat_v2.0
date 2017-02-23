@@ -1,19 +1,14 @@
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
 import java.io.DataInputStream; // deprecated method - rewrite BufferedReader // needs a readMethod
 import java.io.DataOutputStream; // deprecated method - rewrite PrintWriter
 import java.net.Socket;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-
 /**
  * Created by Martin H on 22-02-2017.
  */
-public class ChatClient implements Runnable {
+
+public class ChatClient implements Runnable{
 
     private Socket socket =null;
     private Thread thread = null;
@@ -64,10 +59,19 @@ public class ChatClient implements Runnable {
         }
     }// END start()
 
-    public static void main(String args[]) {
+    public static void main(String args[])  {
 
         new ChatClient("",1234);
+        //launch(args);
 
     }
 
+
+        //@Override
+        //public void start(Stage primaryStage) throws Exception {
+        //   Parent root = FXMLLoader.load(getClass().getResource("/chat.fxml/chatRoom.fxml"));
+        //  primaryStage.setTitle("Chat");
+        //  primaryStage.setScene(new Scene(root, 600, 400));
+        //  primaryStage.show();
+        // }
 } // END Class
