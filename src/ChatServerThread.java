@@ -1,7 +1,5 @@
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Martin H on 22-02-2017.
@@ -14,8 +12,6 @@ public class ChatServerThread extends Thread {
     private DataInputStream inStream = null;
     private DataOutputStream streamOut = null;
     private String clientName;
-    private boolean dubName;
-    private List<ChatServerThread> clients = new ArrayList<>();
 
     public ChatServerThread(ChatServer server, Socket socket) {
 
@@ -43,21 +39,7 @@ public class ChatServerThread extends Thread {
                 String input = inStream.readUTF(); // message from client
                 // check if its a command
                 if (input.startsWith("username#")) {
-                    this.clientName = input.replace("username#", "");
-                    dubName = true;
-                    //compare to method
-                    if (dubName = true) {
-                        for (int i = 0; i < clients.size(); i++) {
-                            for (int k = i + 1; k < clients.size(); k++)
-                                if (k != i && clients.get(k) == clients.get(i)){
-                                //name taken ?
-                                }
-
-                        }
-                    } else {
-                        server.sendOnlineUsers();
-                        System.out.println("Client is now known as " + clientName);
-                    }
+                    clientChangeUserName(input);
                 } else if (input.startsWith("QUIT#")) {
                     String exitString;
                     exitString = input.replace("QUIT#", "Logged off%");
@@ -65,16 +47,35 @@ public class ChatServerThread extends Thread {
                 } else {
                     server.handle(clientName, input);
                 }
-
             } catch (IOException ioe) {
                 System.err.println(clientName + " ERR reading: " + ioe.getMessage());
                 System.exit(-1);
             }
-
-
         } //END while
 
     }// END run
+
+
+    public void clientChangeUserName(String input) {
+        boolean nameTaken = false;
+        String desiredUserName = input.replace("username#", "");
+
+        for (ChatServerThread client : server.getClients()) {
+            if (client.getClientName().toLowerCase().equals(desiredUserName.toLowerCase())) {
+                nameTaken = true;
+            }
+
+        }
+        if (nameTaken) {
+            // do something when name is taken
+            System.out.println("Username " + desiredUserName + " is already taken");
+        } else {
+            this.clientName = desiredUserName;
+            server.sendOnlineUsers();
+            System.out.println("Client is now known as " + clientName);
+        }
+    }
+
 
     public String getClientName() {
         return clientName;
@@ -85,5 +86,4 @@ public class ChatServerThread extends Thread {
         inStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
     }
-
 }

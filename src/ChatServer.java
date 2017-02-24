@@ -80,6 +80,10 @@ public class ChatServer implements Runnable {
 
     }
 
+    public List<ChatServerThread> getClients() {
+        return clients;
+    }
+
     public static void main(String args[]) {
         new ChatServer(1234);
     }
