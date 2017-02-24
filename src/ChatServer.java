@@ -63,9 +63,13 @@ public class ChatServer implements Runnable {
         sendOnlineUsers();
     } // END addClient
 
+
     public void sendOnlineUsers() {
-        String clientList = "online#";
-        // Create Loop to collect names of clients
+
+
+
+// Create Loop to collect names of clients
+            String clientList = "online#";
         for (ChatServerThread client : clients) {
             clientList += client.getClientName() + "\n";
         }
@@ -73,6 +77,7 @@ public class ChatServer implements Runnable {
         for (ChatServerThread client : clients) {
             client.send(clientList);
         }
+
     }
 
     public static void main(String args[]) {

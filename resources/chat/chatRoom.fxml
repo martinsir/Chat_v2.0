@@ -10,60 +10,51 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ChatClientController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ChatClientController">
 
     <children>
-        <Button fx:id="sendMessage" layoutX="306.0" layoutY="340.0" mnemonicParsing="false" onAction="#sendMessage"
-                prefHeight="39.0" prefWidth="97.0" text="Send besked">
+        <Button fx:id="sendMessage" layoutX="306.0" layoutY="340.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="39.0" prefWidth="97.0" text="Send besked">
             <font>
-                <Font name="Corbel Bold" size="14.0"/>
+                <Font name="Corbel Bold" size="14.0" />
             </font>
             <cursor>
-                <Cursor fx:constant="HAND"/>
+                <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
 
-        <TextArea fx:id="onlineUsersTextArea" editable="false" layoutX="425.0" layoutY="57.0" prefHeight="287.0"
-                  prefWidth="142.0" promptText="Ingen venner er online" wrapText="true"/>
+        <TextArea fx:id="onlineUsersTextArea" editable="false" layoutX="425.0" layoutY="57.0" prefHeight="287.0" prefWidth="142.0" promptText="Ingen venner er online" wrapText="true" />
 
         <Text layoutX="425.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Online brugere">
             <font>
-                <Font name="Corbel Bold" size="14.0"/>
+                <Font name="Corbel Bold" size="14.0" />
             </font>
         </Text>
 
         <Text layoutX="27.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chat">
             <font>
-                <Font name="Corbel Bold" size="14.0"/>
+                <Font name="Corbel Bold" size="14.0" />
             </font>
         </Text>
 
-        <TextArea fx:id="writeMessageTextArea" layoutX="27.0" layoutY="277.0" prefHeight="53.0" prefWidth="376.0"
-                  promptText="Skriv til dine venner" wrapText="true"/>
+        <TextArea fx:id="writeMessageTextArea" layoutX="27.0" layoutY="277.0" prefHeight="53.0" prefWidth="376.0" promptText="Skriv til dine venner" text="test 1" wrapText="true" />
         <ScrollPane layoutX="27.0" layoutY="57.0" prefHeight="200.0" prefWidth="376.0">
             <content>
                 <AnchorPane prefHeight="200.0" prefWidth="360.0">
                     <children>
-                        <TextArea fx:id="presentationTextArea" editable="false" maxWidth="-Infinity" prefHeight="200.0"
-                                  prefWidth="361.0" promptText="Ingen af dine venner har skrevet noget endnu"
-                                  wrapText="true" AnchorPane.rightAnchor="0.0"/>
+                        <TextArea fx:id="presentationTextArea" editable="false" maxWidth="-Infinity" prefHeight="200.0" prefWidth="361.0" promptText="Ingen af dine venner har skrevet noget endnu" wrapText="true" AnchorPane.rightAnchor="0.0" />
                     </children>
                 </AnchorPane>
             </content>
         </ScrollPane>
-        <Button fx:id="logout" layoutX="460.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleLogout"
-                prefHeight="61.0" prefWidth="107.0" text="Log ud">
+        <Button fx:id="logout" layoutX="460.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="61.0" prefWidth="107.0" text="Log ud">
             <font>
-                <Font name="Corbel Bold" size="12.0"/>
+                <Font name="Corbel Bold" size="12.0" />
             </font>
         </Button>
-        <TextField fx:id="host" layoutX="27.0" layoutY="386.0" prefHeight="25.0" prefWidth="97.0" text="localhost"/>
-        <TextField fx:id="port" layoutX="139.0" layoutY="386.0" prefHeight="25.0" prefWidth="52.0" text="1234"/>
-        <Label layoutX="56.0" layoutY="367.0" prefHeight="17.0" prefWidth="29.0" text="Host:"/>
-        <Label layoutX="151.0" layoutY="367.0" prefHeight="17.0" prefWidth="29.0" text="Port:"/>
-        <Button fx:id="connect" layoutX="218.0" layoutY="386.0" mnemonicParsing="false"
-                onMouseReleased="#connectToServer" prefHeight="25.0" prefWidth="70.0" text="Join"/>
+        <TextField fx:id="host" layoutX="27.0" layoutY="386.0" prefHeight="25.0" prefWidth="97.0" text="localhost" />
+        <TextField fx:id="port" layoutX="139.0" layoutY="386.0" prefHeight="25.0" prefWidth="52.0" text="1234" />
+        <Label fx:id="jLhost" layoutX="56.0" layoutY="367.0" prefHeight="17.0" prefWidth="29.0" text="Host:" />
+        <Label fx:id="jLport" layoutX="151.0" layoutY="367.0" prefHeight="17.0" prefWidth="29.0" text="Port:" />
+        <Button fx:id="connect" layoutX="218.0" layoutY="386.0" mnemonicParsing="false" onMouseReleased="#connectToServer" prefHeight="25.0" prefWidth="70.0" text="Join" />
     </children>
 </AnchorPane>
