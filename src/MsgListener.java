@@ -1,6 +1,11 @@
+import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
+
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
+import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -23,30 +28,38 @@ public class MsgListener implements Runnable {
     @Override
     public void run() {
 
-        while (true) {
-            String formatDateTime = getStringDateTime();
-            try {
-                String msg = inStream.readUTF();
-                System.out.println(msg);
+        // send heartbeat every 10 min, else, kill client- send to server
 
-                if (msg.contains("Logged off%")) {
-                    msg = msg.substring(msg.indexOf("#") + 1);
-                    msg = msg.replace("%","");
+        try {
+            while (SocketChannel.open().isOpen()) {
+                String formatDateTime = getStringDateTime();
+                try {
+                    String msg = inStream.readUTF();
+                    System.out.println(msg);
+                    if (msg.contains("Logged off%")) {
+                        msg = msg.substring(msg.indexOf("#") + 1);
+                        msg = msg.replace("%", "");
+                    }
+                    if (msg.contains("SERVER: username")) {
+
+                        //send red flag to gui
+
+                    }
+                    //5 1 3 7 4 : online#Martin
+                    if (msg.contains("online#")) {
+                        msg = msg.substring(msg.indexOf("#") + 1, msg.length());
+                        // add to online user textArea
+                        textAreaOnline.setText(msg);
+                    } else if (!msg.isEmpty()) {
+                        textArea.appendText(formatDateTime + "  " + msg + "\n");
+                    }
+                } catch (EOFException e) {
+                    e.printStackTrace();
+                    System.exit(-1);
                 }
-                //5 1 3 7 4 : online#Martin
-                if (msg.contains("online#")) {
-                    msg = msg.substring(msg.indexOf("#") + 1, msg.length());
-
-                    // add to online user textArea
-                    textAreaOnline.setText(msg);
-
-                } else if (!msg.isEmpty()){
-                    textArea.appendText(formatDateTime+ "  "+msg + "\n");
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     } //END run()
 
@@ -55,4 +68,5 @@ public class MsgListener implements Runnable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss"); //dd-MM-yyyy
         return now.format(formatter);
     }
+
 }

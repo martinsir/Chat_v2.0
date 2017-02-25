@@ -47,9 +47,11 @@ public class ChatServerThread extends Thread {
                 } else {
                     server.handle(clientName, input);
                 }
-            } catch (IOException ioe) {
-                System.err.println(clientName + " ERR reading: " + ioe.getMessage());
+            } catch (EOFException ioe) {
+                ioe.printStackTrace();
                 System.exit(-1);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } //END while
 
@@ -61,21 +63,20 @@ public class ChatServerThread extends Thread {
         String desiredUserName = input.replace("username#", "");
 
         for (ChatServerThread client : server.getClients()) {
-            if (client.getClientName().toLowerCase().equals(desiredUserName.toLowerCase())) {
+            if (client.getClientName().equalsIgnoreCase(desiredUserName)) {
                 nameTaken = true;
             }
-
         }
         if (nameTaken) {
             // do something when name is taken
-            System.out.println("Username " + desiredUserName + " is already taken");
+            send("SERVER: username \"" + desiredUserName+"\" is already taken");
+
         } else {
             this.clientName = desiredUserName;
             server.sendOnlineUsers();
             System.out.println("Client is now known as " + clientName);
         }
     }
-
 
     public String getClientName() {
         return clientName;

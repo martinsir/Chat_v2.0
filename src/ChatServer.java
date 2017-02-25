@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by Martin H on 22-02-2017.
  */
@@ -14,6 +16,7 @@ public class ChatServer implements Runnable {
     private List<ChatServerThread> clients = new ArrayList<>();
     private ServerSocket serverSocket = null;
     private Thread thread = null;
+
 
     public ChatServer(int port) {
         try {
@@ -37,6 +40,7 @@ public class ChatServer implements Runnable {
                 addClient(serverSocket.accept());
             } catch (IOException ioe) {
                 System.err.println("Server/client link failed " + ioe.getMessage());
+
             }
         } // END while
 
@@ -58,15 +62,15 @@ public class ChatServer implements Runnable {
             serverThread.open();
             serverThread.start();
         } catch (IOException ioe) {
-            System.err.println("Thread ERR: " + ioe.getMessage());
+            System.out.println("Thread ERR: ");
+            ioe.printStackTrace();
+            System.exit(-1);
         }
         sendOnlineUsers();
     } // END addClient
 
 
     public void sendOnlineUsers() {
-
-
 
 // Create Loop to collect names of clients
             String clientList = "online#";

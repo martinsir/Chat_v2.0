@@ -56,5 +56,7 @@
         <Label fx:id="jLhost" layoutX="56.0" layoutY="367.0" prefHeight="17.0" prefWidth="29.0" text="Host:" />
         <Label fx:id="jLport" layoutX="151.0" layoutY="367.0" prefHeight="17.0" prefWidth="29.0" text="Port:" />
         <Button fx:id="connect" layoutX="218.0" layoutY="386.0" mnemonicParsing="false" onMouseReleased="#connectToServer" prefHeight="25.0" prefWidth="70.0" text="Join" />
+      <Button fx:id="usernameButton" layoutX="218.0" layoutY="347.0" mnemonicParsing="false" onAction="#usernameButton" prefHeight="25.0" prefWidth="70.0" text="Carefully" />
+      <TextField fx:id="usernameTxtField" layoutX="27.0" layoutY="347.0" prefHeight="25.0" prefWidth="170.0" promptText="Choose carefully a username" />
     </children>
 </AnchorPane>
