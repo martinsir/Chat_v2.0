@@ -1,11 +1,6 @@
-import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
-
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.Socket;
-import java.nio.channels.SocketChannel;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,23 +10,21 @@ import java.time.format.DateTimeFormatter;
 
 public class MsgListener implements Runnable {
 
+    private final ChatClientController clientController;
     private DataInputStream inStream;
-    private TextArea textArea;
-    private TextArea textAreaOnline;
 
-    public MsgListener(DataInputStream inStream, TextArea textArea, TextArea textAreaOnline) {
-        this.inStream = inStream;
-        this.textArea = textArea;
-        this.textAreaOnline = textAreaOnline;
+
+    public MsgListener(ChatClientController clientController) {
+        this.inStream = clientController.getInStream();
+        this.clientController = clientController;
+
     }
 
     @Override
     public void run() {
 
-        // send heartbeat every 10 min, else, kill client- send to server
-
         try {
-            while (SocketChannel.open().isOpen()) {
+            while (true) {
                 String formatDateTime = getStringDateTime();
                 try {
                     String msg = inStream.readUTF();
@@ -39,19 +32,18 @@ public class MsgListener implements Runnable {
                     if (msg.contains("Logged off%")) {
                         msg = msg.substring(msg.indexOf("#") + 1);
                         msg = msg.replace("%", "");
+                        this.clientController.getSocket().close();
                     }
                     if (msg.contains("SERVER: username")) {
-
-                        //send red flag to gui
-
-                    }
+                        clientController.setNameTaken(true);
+                    } else clientController.setNameTaken(false);
                     //5 1 3 7 4 : online#Martin
                     if (msg.contains("online#")) {
                         msg = msg.substring(msg.indexOf("#") + 1, msg.length());
                         // add to online user textArea
-                        textAreaOnline.setText(msg);
+                        clientController.getOnlineUsersTextArea().setText(msg);
                     } else if (!msg.isEmpty()) {
-                        textArea.appendText(formatDateTime + "  " + msg + "\n");
+                        clientController.getPresentationTextArea().appendText(formatDateTime + "  " + msg + "\n");
                     }
                 } catch (EOFException e) {
                     e.printStackTrace();

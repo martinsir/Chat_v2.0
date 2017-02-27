@@ -5,13 +5,14 @@ import java.net.Socket;
  * Created by Martin H on 22-02-2017.
  */
 
-public class ChatServerThread extends Thread {
+public class ChatServerThread extends Thread{
 
     private ChatServer server = null;
     private Socket socket = null;
     private DataInputStream inStream = null;
     private DataOutputStream streamOut = null;
     private String clientName;
+    private boolean serverON = true;
 
     public ChatServerThread(ChatServer server, Socket socket) {
 
@@ -34,29 +35,47 @@ public class ChatServerThread extends Thread {
 
     public void run() {
         System.out.println("Server Thread " + clientName + " running.");
-        while (true) {
+        while (serverON) {
             try {
-                String input = inStream.readUTF(); // message from client
+                // message from client
+                String input = inStream.readUTF(); // CATCH EXCEPTION
+
                 // check if its a command
+
+                if (!serverON) {
+                    streamOut.flush();
+                    streamOut.close();
+                    inStream.close();
+                    serverON=false;
+                }
+
+
                 if (input.startsWith("username#")) {
                     clientChangeUserName(input);
                 } else if (input.startsWith("QUIT#")) {
                     String exitString;
                     exitString = input.replace("QUIT#", "Logged off%");
                     server.handle(clientName, exitString);
+                   serverON=false;
+
+                    /////////Keeep SERVER ALIVE AND CLOSE CLIENT
+
                 } else {
                     server.handle(clientName, input);
+                    streamOut.flush();
                 }
-            } catch (EOFException ioe) {
+            } catch (InterruptedIOException iioe) {
+                iioe.printStackTrace();
+            } catch (IOException ioe) {
                 ioe.printStackTrace();
-                System.exit(-1);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                System.exit(-1);
+
             }
         } //END while
 
     }// END run
-
 
     public void clientChangeUserName(String input) {
         boolean nameTaken = false;
@@ -69,7 +88,7 @@ public class ChatServerThread extends Thread {
         }
         if (nameTaken) {
             // do something when name is taken
-            send("SERVER: username \"" + desiredUserName+"\" is already taken");
+            send("SERVER: username \"" + desiredUserName + "\" is already taken.");
 
         } else {
             this.clientName = desiredUserName;

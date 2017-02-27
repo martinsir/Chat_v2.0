@@ -2,18 +2,21 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import org.omg.PortableServer.THREAD_POLICY_ID;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
-import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -27,10 +30,12 @@ import static java.lang.Thread.sleep;
  */
 
 public class ChatClientController implements Initializable {
-
+    private InetSocketAddress address;
     private Socket socket = null;
     private DataInputStream inStream = null;
     private DataOutputStream streamOut = null;
+    private boolean nameTaken = false;
+    private int maxCharPressed = 250;
 
 
     @FXML
@@ -57,6 +62,11 @@ public class ChatClientController implements Initializable {
     private Button usernameButton;
     @FXML
     private TextField usernameTxtField;
+    @FXML
+    private Label maxChar;
+    @FXML
+    private Label charLeft;
+
 
     @FXML
     public void exitApplication(ActionEvent event) {
@@ -65,22 +75,21 @@ public class ChatClientController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         writeMessageTextArea.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 checker();
             }
         });
-        connect.setVisible(true);
+
+        maxChar.setVisible(false);
+        charLeft.setVisible(false);
         usernameTxtField.setVisible(false);
         usernameButton.setVisible(false);
         sendMessage.setVisible(false);
         writeMessageTextArea.setVisible(false);
         logout.setVisible(false);
-
-
-
+        connect.setVisible(true);
     }
 
     public void connectToServer() {
@@ -89,12 +98,14 @@ public class ChatClientController implements Initializable {
             socket = new Socket(host.getText(), Integer.parseInt(port.getText()));
             System.out.println("Connected: " + socket);
             streamOut = new DataOutputStream(socket.getOutputStream());
-
-            MsgListener listener = new MsgListener(new DataInputStream(socket.getInputStream()), presentationTextArea, onlineUsersTextArea);
+            inStream = new DataInputStream(socket.getInputStream());
+            MsgListener listener = new MsgListener(this);
             Thread t1 = new Thread(listener);
+            HeartbeatMessage hbm = new HeartbeatMessage(this);
+            Thread t2 = new Thread(hbm);
+            t2.start();
             t1.start();
-            connected();
-
+            connectedUI();
         } catch (UnknownHostException uhe) {
             System.err.println("Unknown Host : " + uhe.getMessage());
         } catch (IOException ioe) {
@@ -109,8 +120,15 @@ public class ChatClientController implements Initializable {
             port.setVisible(false);
             jLhost.setVisible(false);
             jLport.setVisible(false);
+            checker();
+        }
+    } ////////// END connectToServer
 
-        } else if (!connect.isVisible()) {
+    public void checker() {
+        maxChar.setText(writeMessageTextArea.getText().length() + "/ 250");
+        if (!usernameButton.isVisible()) {
+            maxChar.setVisible(true);
+            charLeft.setVisible(true);
             sendMessage.setVisible(true);
             writeMessageTextArea.setVisible(true);
         } else {
@@ -120,34 +138,36 @@ public class ChatClientController implements Initializable {
             jLhost.setVisible(false);
             jLport.setVisible(false);
         }
-    }
 
-    public void checker() {
-        if (writeMessageTextArea.getText().isEmpty() && usernameTxtField.getText().isEmpty()) {
+        if (writeMessageTextArea.getText().isEmpty()) {
             sendMessage.setDisable(true);
-            usernameButton.setDisable(true);
+        } else if (!writeMessageTextArea.getText().isEmpty()) {
+            sendMessage.setDisable(false);
+        }
+
+        if (writeMessageTextArea.getText().length() >= maxCharPressed) {
+            sendMessage.setDisable(true);
         } else {
             sendMessage.setDisable(false);
-            usernameButton.setDisable(false);
         }
     }
 
-    private void connected() {
+    private void connectedUI() {
         connect.setVisible(false);
         logout.setVisible(true);
         host.setVisible(false);
         port.setVisible(false);
         jLhost.setVisible(false);
         jLport.setVisible(false);
-
     }
 
-    public void sendMessage(ActionEvent actionEvent) {
+    public void sendMessage() {
         checker();
         try {
             streamOut.writeUTF(writeMessageTextArea.getText());
             streamOut.flush();
             writeMessageTextArea.setText("");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -157,50 +177,107 @@ public class ChatClientController implements Initializable {
         try {
             streamOut.writeUTF("QUIT#"); //.......
             streamOut.flush();
-            // System.exit(0);
-            sleep(100);
-            socket.shutdownInput();
-            socket.shutdownOutput();
             exitApplication(actionEvent);
-
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
+
     public void usernameButton() throws IOException {
-        System.out.println("");
+        streamOut.writeUTF("username#" + usernameTxtField.getText());
+        streamOut.flush();
+        usernameButton.setDisable(true);
 
-        //// receive red flag and do something
+        try {
+            sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (getNameTaken() == true) {
+            usernameButton.setVisible(true);
+            usernameTxtField.setVisible(true);
+            presentationTextArea.appendText("Please choose another username.\n");
+            usernameButton.setDisable(false);
 
-//        try {
-            streamOut.writeUTF("username#" + usernameTxtField.getText());
-            streamOut.flush();
-//            presentationTextArea.setText("Checking...");
-//            Thread.sleep(2000);                                       //wait for confirmation?
-//
-//            if (something cleaver) {
-//
-                usernameTxtField.setVisible(false);
-                usernameButton.setVisible(false);
-        sendMessage.setVisible(true);
-        writeMessageTextArea.setVisible(true);
-//                System.out.println("NOT DUPLICATED");
-//                presentationTextArea.setText("Success!");
-//
-//            }else {
-//
-//                usernameTxtField.setVisible(true);
-//                usernameButton.setVisible(true);
-//                System.out.println("DUPLICATED");
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        } else if (nameTaken == false) {
+            usernameButton.setVisible(false);
+            usernameTxtField.setVisible(false);
+            writeMessageTextArea.setVisible(true);
+            sendMessage.setVisible(true);
+            maxChar.setVisible(true);
+            charLeft.setVisible(true);
+            getPresentationTextArea().appendText("Welcome to the chat " + usernameTxtField.getText() +
+                    "\n");
+        }
+    }
+
+
+    public boolean getNameTaken() {
+        return nameTaken;
+    }
+
+    public void setNameTaken(boolean nameTaken) {
+        this.nameTaken = nameTaken;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public DataInputStream getInStream() {
+        return inStream;
+    }
+
+    public DataOutputStream getStreamOut() {
+        return streamOut;
+    }
+
+    public TextArea getWriteMessageTextArea() {
+        return writeMessageTextArea;
+    }
+
+    public TextField getHost() {
+        return host;
+    }
+
+    public TextField getPort() {
+        return port;
+    }
+
+    public Button getConnect() {
+        return connect;
+    }
+
+    public Button getSendMessage() {
+        return sendMessage;
+    }
+
+    public TextArea getPresentationTextArea() {
+        return presentationTextArea;
+    }
+
+    public TextArea getOnlineUsersTextArea() {
+        return onlineUsersTextArea;
+    }
+
+    public Label getjLport() {
+        return jLport;
+    }
+
+    public Label getjLhost() {
+        return jLhost;
+    }
+
+    public Button getLogout() {
+        return logout;
+    }
+
+    public Button getUsernameButton() {
+        return usernameButton;
+    }
+
+    public TextField getUsernameTxtField() {
+        return usernameTxtField;
     }
 }

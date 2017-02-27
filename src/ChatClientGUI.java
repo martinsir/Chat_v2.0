@@ -17,7 +17,6 @@ public class ChatClientGUI extends Application {
         primaryStage.setTitle("Chat");
         primaryStage.setScene(new Scene(root, 600, 450));
         primaryStage.show();
-
     }
 
     @Override

@@ -46,17 +46,27 @@
                 </AnchorPane>
             </content>
         </ScrollPane>
-        <Button fx:id="logout" layoutX="460.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="61.0" prefWidth="107.0" text="Log ud">
+        <Button fx:id="logout" layoutX="460.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="61.0" prefWidth="107.0" text="Afslut">
             <font>
-                <Font name="Corbel Bold" size="12.0" />
+                <Font name="Corbel Bold" size="14.0" />
             </font>
         </Button>
-        <TextField fx:id="host" layoutX="27.0" layoutY="386.0" prefHeight="25.0" prefWidth="97.0" text="localhost" />
-        <TextField fx:id="port" layoutX="139.0" layoutY="386.0" prefHeight="25.0" prefWidth="52.0" text="1234" />
+        <TextField fx:id="host" layoutX="27.0" layoutY="386.0" prefHeight="25.0" prefWidth="97.0" promptText="localhost" text="localhost" />
+        <TextField fx:id="port" layoutX="139.0" layoutY="386.0" prefHeight="25.0" prefWidth="52.0" promptText="1234" text="1234" />
         <Label fx:id="jLhost" layoutX="56.0" layoutY="367.0" prefHeight="17.0" prefWidth="29.0" text="Host:" />
         <Label fx:id="jLport" layoutX="151.0" layoutY="367.0" prefHeight="17.0" prefWidth="29.0" text="Port:" />
-        <Button fx:id="connect" layoutX="218.0" layoutY="386.0" mnemonicParsing="false" onMouseReleased="#connectToServer" prefHeight="25.0" prefWidth="70.0" text="Join" />
-      <Button fx:id="usernameButton" layoutX="218.0" layoutY="347.0" mnemonicParsing="false" onAction="#usernameButton" prefHeight="25.0" prefWidth="70.0" text="Carefully" />
-      <TextField fx:id="usernameTxtField" layoutX="27.0" layoutY="347.0" prefHeight="25.0" prefWidth="170.0" promptText="Choose carefully a username" />
+        <Button fx:id="connect" layoutX="218.0" layoutY="386.0" mnemonicParsing="false" onMouseReleased="#connectToServer" prefHeight="25.0" prefWidth="70.0" text="Forbind" />
+      <Button fx:id="usernameButton" layoutX="218.0" layoutY="347.0" mnemonicParsing="false" onAction="#usernameButton" prefHeight="25.0" prefWidth="70.0" text="Tilslut" />
+      <TextField fx:id="usernameTxtField" layoutX="27.0" layoutY="347.0" prefHeight="25.0" prefWidth="170.0" promptText="Vælg et brugernavn" text="mh" />
+      <Label fx:id="maxChar" disable="true" layoutX="125.0" layoutY="336.0" prefHeight="17.0" prefWidth="52.0" text="250/205">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="charLeft" disable="true" layoutX="35.0" layoutY="336.0" prefHeight="17.0" prefWidth="82.0" text="Characters left:">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>
