@@ -85,8 +85,6 @@ public class ChatClientController implements Initializable {
         writeMessageTextArea.setVisible(false);
         logout.setVisible(false);
         connect.setVisible(true);
-//        usernameButton.setVisible(true);
-//        usernameTxtField.setVisible(true);
     }
 
     public void connectToServer() {
@@ -142,10 +140,8 @@ public class ChatClientController implements Initializable {
 //        }
 
         if (writeMessageTextArea.getText().length() >= maxCharPressed || writeMessageTextArea.getText().isEmpty()) {
-            System.out.println(" kahdbkahdbæak");
             sendMessage.setDisable(true);
         } else {
-            System.out.println("-----------------");
             sendMessage.setDisable(false);
         }
     }
@@ -172,7 +168,7 @@ public class ChatClientController implements Initializable {
 
     public void handleLogout(ActionEvent actionEvent) {
         try {
-            streamOut.writeUTF("QUIT#"); //.......
+            streamOut.writeUTF("QUIT#");
             streamOut.flush();
             exitApplication(actionEvent);
         } catch (IOException e) {

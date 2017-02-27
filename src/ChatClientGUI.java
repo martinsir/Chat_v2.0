@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 
 public class ChatClientGUI extends Application {
 
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         AnchorPane root = FXMLLoader.load(getClass().getResource("/chat/chatRoom.fxml"));
@@ -24,7 +23,6 @@ public class ChatClientGUI extends Application {
         System.out.println("Stage is closing");
         // send request to server
     }
-
     public static void main(String[] args) {
         launch();
     }

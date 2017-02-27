@@ -40,11 +40,12 @@ public class ChatServerThread extends Thread{
                 inputC = inStream.readUTF();
                 // check if its a command
 
-//                if (inputC.contains("It's ALIVE#")) {
+                if (inputC.contains("Sending a HeartBeat#")) {
 //                    String heartBeat;
 //                    heartBeat = inputC.replaceAll(inputC,"");
 //                    heartBeat =inputC;
-//                }
+                    interrupt();
+                }
 
                 if (inputC.startsWith("username#")) {
                     clientChangeUserName(inputC);

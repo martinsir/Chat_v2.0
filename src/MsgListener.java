@@ -25,15 +25,13 @@ public class MsgListener implements Runnable {
 
         try {
             while (true) {
-                String formatDateTime = getStringDateTime();
+                String formatDateTime = dateTime();
                 try {
                     String msg = inStream.readUTF();
                     System.out.println(msg);
 
-                    if(msg.contains("It's ALIVE#")) {
-                        String heartBeatFilter;
-                        heartBeatFilter = msg.replaceAll("nullIt's ALIVE#","");
-                        heartBeatFilter = msg;
+                    if(msg.contains("Sending a HeartBeat#")) {
+                        msg = msg.substring(msg.indexOf("#")+1);
 
                     }
                     if (msg.contains("Logged off%")) {
@@ -65,7 +63,7 @@ public class MsgListener implements Runnable {
         }
     } //END run()
 
-    private String getStringDateTime() {
+    private String dateTime() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss"); //dd-MM-yyyy
         return now.format(formatter);
