@@ -48,7 +48,6 @@ public class ChatServer implements Runnable {
         for (ChatServerThread client : clients) {
             client.send(id + ": " + input);
         }
-        //System.out.println("heartbeat from client: \nID " + id + "\nMSG: " + input);
 
     } // END handle()
 

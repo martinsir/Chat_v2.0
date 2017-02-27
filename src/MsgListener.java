@@ -36,7 +36,9 @@ public class MsgListener implements Runnable {
                     }
                     if (msg.contains("SERVER: username")) {
                         clientController.setNameTaken(true);
-                    } else clientController.setNameTaken(false);
+                    } else {
+                        clientController.setNameTaken(false);
+                    }
                     //5 1 3 7 4 : online#Martin
                     if (msg.contains("online#")) {
                         msg = msg.substring(msg.indexOf("#") + 1, msg.length());
