@@ -12,7 +12,6 @@ public class ChatServerThread extends Thread{
     private DataInputStream inStream = null;
     private DataOutputStream streamOut = null;
     private String clientName;
-    private boolean serverON = true;
 
     public ChatServerThread(ChatServer server, Socket socket) {
 
@@ -35,46 +34,36 @@ public class ChatServerThread extends Thread{
 
     public void run() {
         System.out.println("Server Thread " + clientName + " running.");
-        while (serverON) {
-            try {
-                // message from client
-                String input = inStream.readUTF(); // CATCH EXCEPTION
-
+        while(true) {
+            String inputC;
+            try {  // message from client
+                inputC = inStream.readUTF();
                 // check if its a command
 
-                if (!serverON) {
-                    streamOut.flush();
-                    streamOut.close();
-                    inStream.close();
-                    serverON=false;
-                }
+//                if (inputC.contains("It's ALIVE#")) {
+//                    String heartBeat;
+//                    heartBeat = inputC.replaceAll(inputC,"");
+//                    heartBeat =inputC;
+//                }
 
-
-                if (input.startsWith("username#")) {
-                    clientChangeUserName(input);
-                } else if (input.startsWith("QUIT#")) {
+                if (inputC.startsWith("username#")) {
+                    clientChangeUserName(inputC);
+                } else if (inputC.equals("QUIT#")) {
                     String exitString;
-                    exitString = input.replace("QUIT#", "Logged off%");
+                    exitString = inputC.replace("QUIT#", "Logged off%");
                     server.handle(clientName, exitString);
-                   serverON=false;
-
-                    /////////Keeep SERVER ALIVE AND CLOSE CLIENT
-
+                    socket.close();
+                    break;
                 } else {
-                    server.handle(clientName, input);
+                    server.handle(clientName, inputC);
                     streamOut.flush();
                 }
             } catch (InterruptedIOException iioe) {
                 iioe.printStackTrace();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.exit(-1);
-
             }
-        } //END while
-
+        }//END while
     }// END run
 
     public void clientChangeUserName(String input) {
@@ -96,6 +85,7 @@ public class ChatServerThread extends Thread{
             System.out.println("Client is now known as " + clientName);
         }
     }
+
 
     public String getClientName() {
         return clientName;

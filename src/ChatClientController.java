@@ -25,12 +25,12 @@ import static java.lang.Thread.sleep;
  */
 
 public class ChatClientController implements Initializable {
-    private InetSocketAddress address;
     private Socket socket = null;
     private DataInputStream inStream = null;
     private DataOutputStream streamOut = null;
     private boolean nameTaken = false;
     private int maxCharPressed = 250;
+    private String chosenUserName;
 
 
     @FXML
@@ -85,6 +85,8 @@ public class ChatClientController implements Initializable {
         writeMessageTextArea.setVisible(false);
         logout.setVisible(false);
         connect.setVisible(true);
+//        usernameButton.setVisible(true);
+//        usernameTxtField.setVisible(true);
     }
 
     public void connectToServer() {
@@ -133,16 +135,17 @@ public class ChatClientController implements Initializable {
             jLhost.setVisible(false);
             jLport.setVisible(false);
         }
+//        if (writeMessageTextArea.getText().isEmpty()) {
+//            sendMessage.setDisable(true);
+//        } else if (!writeMessageTextArea.getText().isEmpty()) {
+//            sendMessage.setDisable(false);
+//        }
 
-        if (writeMessageTextArea.getText().isEmpty()) {
-            sendMessage.setDisable(true);
-        } else if (!writeMessageTextArea.getText().isEmpty()) {
-            sendMessage.setDisable(false);
-        }
-
-        if (writeMessageTextArea.getText().length() >= maxCharPressed) {
+        if (writeMessageTextArea.getText().length() >= maxCharPressed || writeMessageTextArea.getText().isEmpty()) {
+            System.out.println(" kahdbkahdbæak");
             sendMessage.setDisable(true);
         } else {
+            System.out.println("-----------------");
             sendMessage.setDisable(false);
         }
     }
@@ -162,7 +165,6 @@ public class ChatClientController implements Initializable {
             streamOut.writeUTF(writeMessageTextArea.getText());
             streamOut.flush();
             writeMessageTextArea.setText("");
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -202,8 +204,9 @@ public class ChatClientController implements Initializable {
             sendMessage.setVisible(true);
             maxChar.setVisible(true);
             charLeft.setVisible(true);
-            getPresentationTextArea().appendText("Link: Success!\nWelcome to the chat " + usernameTxtField.getText() +
-                    "\n");
+            getPresentationTextArea().appendText("Link: Success!\nWelcome to the chat "
+                    + usernameTxtField.getText()+"\n");
+            setChosenUserName(usernameTxtField.getText());
         }
     }
 
@@ -274,5 +277,13 @@ public class ChatClientController implements Initializable {
 
     public TextField getUsernameTxtField() {
         return usernameTxtField;
+    }
+
+    public String getChosenUserName() {
+        return chosenUserName;
+    }
+
+    public void setChosenUserName(String chosenUserName) {
+        this.chosenUserName = chosenUserName;
     }
 }

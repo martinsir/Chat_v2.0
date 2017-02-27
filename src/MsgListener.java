@@ -29,6 +29,13 @@ public class MsgListener implements Runnable {
                 try {
                     String msg = inStream.readUTF();
                     System.out.println(msg);
+
+                    if(msg.contains("It's ALIVE#")) {
+                        String heartBeatFilter;
+                        heartBeatFilter = msg.replaceAll("nullIt's ALIVE#","");
+                        heartBeatFilter = msg;
+
+                    }
                     if (msg.contains("Logged off%")) {
                         msg = msg.substring(msg.indexOf("#") + 1);
                         msg = msg.replace("%", "");
@@ -49,6 +56,7 @@ public class MsgListener implements Runnable {
                     }
                 } catch (EOFException e) {
                     e.printStackTrace();
+                    System.out.println(e.getCause().getMessage());
                     System.exit(-1);
                 }
             }

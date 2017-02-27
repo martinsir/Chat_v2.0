@@ -38,7 +38,6 @@ public class ChatServer implements Runnable {
             } catch (IOException ioe) {
                 System.err.println("Server/client link failed " + ioe.getMessage());
 
-
             }
         } // END while
 
@@ -48,6 +47,7 @@ public class ChatServer implements Runnable {
         for (ChatServerThread client : clients) {
             client.send(id + ": " + input);
         }
+        System.out.println("Server recorded: \n"+"ID: "+id+" \nInput: "+input+"\n");
 
     } // END handle()
 
@@ -66,7 +66,6 @@ public class ChatServer implements Runnable {
         }
         sendOnlineUsers();
     } // END addClient
-
 
     public void sendOnlineUsers() {
 

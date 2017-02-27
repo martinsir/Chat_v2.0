@@ -1,8 +1,10 @@
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.Socket;
 
 /**
  * Created by Martin H on 25-02-2017.
@@ -14,39 +16,28 @@ import java.net.MulticastSocket;
     /// Remember the Server GUI
 
 public class HeartbeatMessage extends Thread {
-
-//    private static long resetMsg = 1000; // 10 min -600.000
-//    private DatagramPacket heartBeatMsg;
-    private DataOutputStream streamOut = null;
     private final ChatClientController clientController;
-    ///join a multicast grp and send the grp salutations
-    String msg = "Wave at the server";
-    InetAddress group = InetAddress.getByName("224.1.2.3");
-    MulticastSocket mcs = new MulticastSocket(1234); // UDP connection
-    DatagramPacket hiPacket = new DatagramPacket(msg.getBytes(), msg.length(), group, 1234);
-    //get their responses
-    byte[] buf = new byte[1000];
-    DatagramPacket recv = new DatagramPacket(buf,buf.length);
-
-
-
+    private Socket socket = new Socket();
+//    private DataOutputStream dump = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
     public HeartbeatMessage(ChatClientController clientController) throws IOException {
-//        this.heartBeatMsg = heartBeatMsg;
         this.clientController = clientController;
     }
 
     public void run() {
 
-        try {
-            mcs.joinGroup(group);
-            mcs.send(hiPacket);
-            mcs.receive(recv);
-            //ok, I'm done talking - leave the group
-           // mcs.leaveGroup(group);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        while (clientController.getSocket().isConnected() ==true) {
+//            try {
+//               // clientController.getStreamOut().writeUTF(clientController.getChosenUserName()+"It's ALIVE#");
+//               // dump.writeUTF("Bump");
+//                //clientController.getStreamOut().flush();
+//                sleep(10000);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 } // end run
 
