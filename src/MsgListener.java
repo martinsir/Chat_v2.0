@@ -37,7 +37,9 @@ public class MsgListener implements Runnable {
                     if (msg.contains("Logged off%")) {
                         msg = msg.substring(msg.indexOf("#") + 1);
                         msg = msg.replace("%", "");
+                        System.out.println("LUK NED BUTTON TRYKKET "+this.clientController.getSocket());
                         this.clientController.getSocket().close();
+                        break;
                     }
                     if (msg.contains("SERVER: username")) {
                         clientController.setNameTaken(true);
@@ -60,6 +62,12 @@ public class MsgListener implements Runnable {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            try {
+                clientController.getSocket().close();
+                System.out.println("lukker ned msg lsitener");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     } //END run()
 

@@ -15,6 +15,7 @@ public class ChatServer implements Runnable {
     private Thread thread = null;
 
     public ChatServer(int port) {
+
         try {
 
             System.out.println("Binding to port " + port + ", please wait ...");
@@ -40,8 +41,8 @@ public class ChatServer implements Runnable {
 
             }
         } // END while
-
     } // END run()
+
 
     public synchronized void handle(String id, String input) {
         for (ChatServerThread client : clients) {

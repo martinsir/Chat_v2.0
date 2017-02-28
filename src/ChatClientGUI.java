@@ -27,4 +27,3 @@ public class ChatClientGUI extends Application {
         launch();
     }
 }
-

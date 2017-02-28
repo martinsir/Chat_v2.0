@@ -8,10 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -133,13 +133,8 @@ public class ChatClientController implements Initializable {
             jLhost.setVisible(false);
             jLport.setVisible(false);
         }
-//        if (writeMessageTextArea.getText().isEmpty()) {
-//            sendMessage.setDisable(true);
-//        } else if (!writeMessageTextArea.getText().isEmpty()) {
-//            sendMessage.setDisable(false);
-//        }
 
-        if (writeMessageTextArea.getText().length() >= maxCharPressed || writeMessageTextArea.getText().isEmpty()) {
+        if (writeMessageTextArea.getText().length() > maxCharPressed || writeMessageTextArea.getText().isEmpty()) {
             sendMessage.setDisable(true);
         } else {
             sendMessage.setDisable(false);

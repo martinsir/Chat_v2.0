@@ -1,11 +1,12 @@
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Created by Martin H on 22-02-2017.
  */
 
-public class ChatServerThread extends Thread{
+public class ChatServerThread extends Thread {
 
     private ChatServer server = null;
     private Socket socket = null;
@@ -34,18 +35,11 @@ public class ChatServerThread extends Thread{
 
     public void run() {
         System.out.println("Server Thread " + clientName + " running.");
-        while(true) {
+        while (true) {
             String inputC;
             try {  // message from client
                 inputC = inStream.readUTF();
                 // check if its a command
-
-                if (inputC.contains("Sending a HeartBeat#")) {
-//                    String heartBeat;
-//                    heartBeat = inputC.replaceAll(inputC,"");
-//                    heartBeat =inputC;
-                    interrupt();
-                }
 
                 if (inputC.startsWith("username#")) {
                     clientChangeUserName(inputC);
@@ -53,18 +47,29 @@ public class ChatServerThread extends Thread{
                     String exitString;
                     exitString = inputC.replace("QUIT#", "Logged off%");
                     server.handle(clientName, exitString);
+                    server.getClients().remove(this);
+                    inStream.close();
+                    streamOut.close();
                     socket.close();
                     break;
                 } else {
                     server.handle(clientName, inputC);
                     streamOut.flush();
                 }
-            } catch (InterruptedIOException iioe) {
-                iioe.printStackTrace();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("GUI LUKKER NED ");
+                e.printStackTrace();
+                try {
+                    socket.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                break;
             }
+
         }//END while
+
+
     }// END run
 
     public void clientChangeUserName(String input) {
