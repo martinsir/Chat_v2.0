@@ -17,7 +17,7 @@ public class HeartbeatMessage extends Thread {
 
     public void run() {
 
-        while (clientController.getSocket().isConnected() ==true) {
+        while (!this.clientController.getSocket().isClosed()) {
             String formatDateTime = dateTime();
             try {
                 clientController.getStreamOut().writeUTF(formatDateTime+" "+"Sending a HeartBeat#");
@@ -27,7 +27,8 @@ public class HeartbeatMessage extends Thread {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-                try {clientController.getSocket().close();
+                try {
+                    this.clientController.getSocket().close();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
