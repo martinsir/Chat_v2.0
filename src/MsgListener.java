@@ -64,7 +64,7 @@ public class MsgListener implements Runnable {
             e.printStackTrace();
             try {
                 clientController.getSocket().close();
-                System.out.println("lukker ned msg lsitener");
+                System.out.println("msglistener lukker ned ");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
