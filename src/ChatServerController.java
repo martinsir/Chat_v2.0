@@ -31,18 +31,18 @@ public class ChatServerController implements Initializable, Runnable {
     private TextArea presentationTextAreaServer;
     @FXML
     private TextArea onlineUsersTextAreaServer;
+
     @FXML
     public void exitApplication(ActionEvent event) {
         Platform.exit();
     }
 
 
-
     private List<ChatServerThread> clients = new ArrayList<>();
     private ServerSocket serverSocket = null;
     private Thread thread = null;
     private ChatServerThread chatServerThread;
-    private boolean connected =false;
+    private boolean connected = false;
 
 
     @Override
@@ -52,17 +52,17 @@ public class ChatServerController implements Initializable, Runnable {
 
     public void startServer() {
 
-        if (connected==false) {
+        if (connected == false) {
             try {
                 serverSocket = new ServerSocket(1234);
                 this.thread = new Thread(this);
                 this.thread.start();
-                connected=true;
+                connected = true;
                 startServer.setDisable(true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             startServer.setDisable(true);
         }
     }
@@ -128,23 +128,15 @@ public class ChatServerController implements Initializable, Runnable {
         return clients;
     }
 
-    public void kickButton(ActionEvent actionEvent) throws IOException, InterruptedException,Exception {
+    public void kickButton(ActionEvent actionEvent) throws IOException, InterruptedException, Exception {
         comboBoxClients.getValue().getServer().getClients().remove(this);
         comboBoxClients.getValue().getSocket().close();
     }
 
-    public void comboBoxClients(ActionEvent actionEvent) {
-
-    }
-
     public void presentationTextAreaServer(MouseEvent mouseEvent) {
-
     }
 
-    public void writeCMDTextAreaServer(MouseEvent mouseEvent) {
-    }
-
-    public void cmdButton(ActionEvent actionEvent) {
+    public void comboBoxClients(ActionEvent actionEvent) {
 
     }
 }

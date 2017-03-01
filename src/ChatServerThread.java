@@ -60,7 +60,7 @@ public class ChatServerThread extends Thread {
                 e.printStackTrace();
                 try {
                     socket.close(); // ///////////////////
-               } catch (IOException e1) {
+                } catch (IOException e1) {
                     e1.printStackTrace();
                 }
                 break;

@@ -198,7 +198,7 @@ public class ChatClientController implements Initializable {
             maxChar.setVisible(true);
             charLeft.setVisible(true);
             getPresentationTextArea().appendText("Link: Success!\nWelcome to the chat "
-                    + usernameTxtField.getText()+"\n");
+                    + usernameTxtField.getText() + "\n");
             setChosenUserName(usernameTxtField.getText());
         }
     }
@@ -224,26 +224,6 @@ public class ChatClientController implements Initializable {
         return streamOut;
     }
 
-    public TextArea getWriteMessageTextArea() {
-        return writeMessageTextArea;
-    }
-
-    public TextField getHost() {
-        return host;
-    }
-
-    public TextField getPort() {
-        return port;
-    }
-
-    public Button getConnect() {
-        return connect;
-    }
-
-    public Button getSendMessage() {
-        return sendMessage;
-    }
-
     public TextArea getPresentationTextArea() {
         return presentationTextArea;
     }
@@ -252,29 +232,6 @@ public class ChatClientController implements Initializable {
         return onlineUsersTextArea;
     }
 
-    public Label getjLport() {
-        return jLport;
-    }
-
-    public Label getjLhost() {
-        return jLhost;
-    }
-
-    public Button getLogout() {
-        return logout;
-    }
-
-    public Button getUsernameButton() {
-        return usernameButton;
-    }
-
-    public TextField getUsernameTxtField() {
-        return usernameTxtField;
-    }
-
-    public String getChosenUserName() {
-        return chosenUserName;
-    }
 
     public void setChosenUserName(String chosenUserName) {
         this.chosenUserName = chosenUserName;

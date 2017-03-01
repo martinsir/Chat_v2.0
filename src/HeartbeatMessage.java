@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -8,7 +6,7 @@ import java.time.format.DateTimeFormatter;
  * Created by Martin H on 25-02-2017.
  */
 
-    /// Remember the Server GUI
+/// Remember the Server GUI
 
 public class HeartbeatMessage extends Thread {
     private final ChatClientController clientController;
@@ -22,13 +20,13 @@ public class HeartbeatMessage extends Thread {
         while (this.clientController.getSocket().isConnected()) {
             String formatDateTime = dateTime();
             try {
-                clientController.getStreamOut().writeUTF(formatDateTime+" "+"Sending a HeartBeat#");
+                clientController.getStreamOut().writeUTF(formatDateTime + " " + "Sending a HeartBeat#");
                 clientController.getStreamOut().flush();
                 sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace();               ///// Kill thread - it's still sending on a closed socket
                 try {
                     this.clientController.getSocket().close();
                     break;

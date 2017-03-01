@@ -28,8 +28,8 @@ public class MsgListener implements Runnable {
                     String msg = inStream.readUTF();
                     System.out.println(msg);
 
-                    if(msg.contains("Sending a HeartBeat#")) {
-                        msg = msg.substring(msg.indexOf("#")+1);
+                    if (msg.contains("Sending a HeartBeat#")) {
+                        msg = msg.substring(msg.indexOf("#") + 1);
 
                     }
                     if (msg.contains("Logged off%")) {
@@ -62,7 +62,7 @@ public class MsgListener implements Runnable {
             System.out.println("Caught it c2");
             e.printStackTrace();
             try {
-                System.out.println("msglistener lukker ned ");
+                System.out.println("msglistener shutting down");   // kill thread?
                 this.clientController.getSocket().close();
                 System.exit(0);
             } catch (IOException e1) {
