@@ -18,6 +18,11 @@ public class ChatServerGUI extends Application {
         primaryStage.setScene(new Scene(root, 600, 450));
         primaryStage.show();
     }
+    @Override
+    public void stop() {
+        System.out.println("Stage is closing");
+        System.exit(0);
+    }
     public static void main(String[] args) {
         launch(args);
     }
