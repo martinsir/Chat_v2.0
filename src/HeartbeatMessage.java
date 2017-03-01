@@ -34,9 +34,6 @@ public class HeartbeatMessage extends Thread {
                     break;
                 } catch (IOException e1) {
                     e1.printStackTrace();
-                }catch (Exception ee){
-                    ee.printStackTrace();
-                    break;
                 }
             }
         }

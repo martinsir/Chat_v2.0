@@ -128,7 +128,7 @@ public class ChatServerController implements Initializable, Runnable {
         return clients;
     }
 
-    public void kickButton(ActionEvent actionEvent) throws IOException, InterruptedException {
+    public void kickButton(ActionEvent actionEvent) throws IOException, InterruptedException,Exception {
         comboBoxClients.getValue().getServer().getClients().remove(this);
         comboBoxClients.getValue().getSocket().close();
     }
