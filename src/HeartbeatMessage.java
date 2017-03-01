@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.net.Socket;
+import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -17,7 +19,7 @@ public class HeartbeatMessage extends Thread {
 
     public void run() {
 
-        while (true) {
+        while (this.clientController.getSocket().isConnected()) {
             String formatDateTime = dateTime();
             try {
                 clientController.getStreamOut().writeUTF(formatDateTime+" "+"Sending a HeartBeat#");
@@ -32,6 +34,9 @@ public class HeartbeatMessage extends Thread {
                     break;
                 } catch (IOException e1) {
                     e1.printStackTrace();
+                }catch (Exception ee){
+                    ee.printStackTrace();
+                    break;
                 }
             }
         }

@@ -1,4 +1,3 @@
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,7 +18,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Martin H on 01-03-2017.
  */
-public class ChatServerController implements Initializable,Runnable{
+public class ChatServerController implements Initializable, Runnable {
 
     @FXML
     private Button startServer;
@@ -37,8 +36,9 @@ public class ChatServerController implements Initializable,Runnable{
 
     private List<ChatServerThread> clients = new ArrayList<>();
     private ServerSocket serverSocket = null;
-    private Thread thread= null;
+    private Thread thread = null;
     private ChatServerThread chatServerThread;
+    private boolean connected =false;
 
 
     @Override
@@ -47,39 +47,47 @@ public class ChatServerController implements Initializable,Runnable{
     }
 
     public void startServer() {
-        try {
-            serverSocket = new ServerSocket(1234);
-            this.thread = new Thread(this);
-            this.thread.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if (connected==false) {
+            try {
+                serverSocket = new ServerSocket(1234);
+                this.thread = new Thread(this);
+                this.thread.start();
+                connected=true;
+                startServer.setDisable(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            startServer.setDisable(true);
         }
     }
-
 
     @Override
     public void run() {
         while (thread != null) {
+
             try {
-                presentationTextAreaServer.appendText("Server started \n"+serverSocket+"\n");
+                sendOnlineUsers();
+                presentationTextAreaServer.appendText("Server started \n" + serverSocket + "\n");
                 presentationTextAreaServer.appendText("Waiting for client...\n");
                 addClient(serverSocket.accept());
-
             } catch (IOException ioe) {
                 System.err.println("Server/client link failed " + ioe.getMessage());
 
             }
         } // END while
-
     }
 
     public void addClient(Socket socket) {
-        presentationTextAreaServer.appendText("Client accepted " +socket+"\n");
+        presentationTextAreaServer.appendText("Client accepted " + socket + "\n");
         ChatServerThread serverThread = new ChatServerThread(this, socket);
         clients.add(serverThread);
         try {
             serverThread.open();
             serverThread.start();
+            comboBoxClients.getItems().clear();
+            comboBoxClients.getItems().addAll(clients);
 
         } catch (IOException ioe) {
             System.out.println("Thread ERR: ");
@@ -101,26 +109,24 @@ public class ChatServerController implements Initializable,Runnable{
         }
         onlineUsersTextAreaServer.setText(clientList);
 
-            comboBoxClients.getItems().clear();
-            comboBoxClients.getItems().addAll(clients);
-
+        comboBoxClients.getItems().clear();
+        comboBoxClients.getItems().addAll(clients);
     }
 
     public synchronized void handle(String id, String input) {
         for (ChatServerThread client : clients) {
             client.send(id + ": " + input);
         }
-//        System.out.println("Server recorded: \n" + "ID: " + id + " \nInput: " + input + "\n");
-        presentationTextAreaServer.appendText("Server recorded: \n"+"ID: "+id+" Input: "+input+"\n");
+        presentationTextAreaServer.appendText("Server recorded: \n" + "ID: " + id + " Input: " + input + "\n");
     } // END handle()
 
     public List<ChatServerThread> getClients() {
         return clients;
     }
 
-    public void kickButton(ActionEvent actionEvent) throws IOException {
+    public void kickButton(ActionEvent actionEvent) throws IOException, InterruptedException {
+        comboBoxClients.getValue().getServer().getClients().remove(this);
         comboBoxClients.getValue().getSocket().close();
-            comboBoxClients.getValue().getServer().getClients().remove(this);
     }
 
     public void comboBoxClients(ActionEvent actionEvent) {
@@ -135,7 +141,6 @@ public class ChatServerController implements Initializable,Runnable{
     }
 
     public void cmdButton(ActionEvent actionEvent) {
-        chatServerThread.send("test");
 
     }
 }
