@@ -22,6 +22,7 @@ public class ChatClientGUI extends Application {
     public void stop() {
         System.out.println("Stage is closing");
         // send request to server
+        System.exit(0);
     }
     public static void main(String[] args) {
         launch();

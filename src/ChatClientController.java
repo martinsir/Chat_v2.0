@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -177,7 +178,7 @@ public class ChatClientController implements Initializable {
         usernameButton.setDisable(true);
 
         try {
-            sleep(2000);
+            sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -186,8 +187,10 @@ public class ChatClientController implements Initializable {
             usernameTxtField.setVisible(true);
             presentationTextArea.appendText("Please choose another username.\n");
             usernameButton.setDisable(false);
+            System.out.println("nametaken true");
 
-        } else if (nameTaken == false) {
+        } else if (getNameTaken() == false) {
+            System.out.println("nametaken false");
             usernameButton.setVisible(false);
             usernameTxtField.setVisible(false);
             writeMessageTextArea.setVisible(true);

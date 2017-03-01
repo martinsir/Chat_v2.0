@@ -17,13 +17,11 @@ public class ChatServer implements Runnable {
     public ChatServer(int port) {
 
         try {
-
             System.out.println("Binding to port " + port + ", please wait ...");
             serverSocket = new ServerSocket(port);
             System.out.println("Server started: " + serverSocket);
             this.thread = new Thread(this);
             this.thread.start();
-
         } catch (IOException ioe) {
             System.out.println("Port binding FAILED " + port + ": " + ioe.getMessage());
         }
@@ -38,7 +36,6 @@ public class ChatServer implements Runnable {
 
             } catch (IOException ioe) {
                 System.err.println("Server/client link failed " + ioe.getMessage());
-
             }
         } // END while
     } // END run()
@@ -49,6 +46,9 @@ public class ChatServer implements Runnable {
             client.send(id + ": " + input);
         }
         System.out.println("Server recorded: \n"+"ID: "+id+" \nInput: "+input+"\n");
+
+
+        getClientID(); ///////// ID DEBUG
 
     } // END handle()
 
@@ -67,6 +67,15 @@ public class ChatServer implements Runnable {
         }
         sendOnlineUsers();
     } // END addClient
+
+    //////////////////////////////////////DEBUG ID
+    public void getClientID(){
+        String id;
+        for (ChatServerThread client:clients) {
+          id = client.getClientName();
+            System.out.println(id+"<------------");
+        }
+    }
 
     public void sendOnlineUsers() {
 

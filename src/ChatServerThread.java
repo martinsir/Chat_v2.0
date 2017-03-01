@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * Created by Martin H on 22-02-2017.
@@ -20,6 +19,7 @@ public class ChatServerThread extends Thread {
         this.socket = socket;
         this.clientName = String.valueOf(socket.getPort());
 
+
     } // END ChatServerThread
 
     public void send(String message) {
@@ -27,7 +27,6 @@ public class ChatServerThread extends Thread {
         try {
             streamOut.writeUTF(message);
             streamOut.flush();
-
         } catch (IOException ioe) {
             System.err.println(clientName + "ERR sending: " + ioe.getMessage());
         }
@@ -44,13 +43,15 @@ public class ChatServerThread extends Thread {
                 if (inputC.startsWith("username#")) {
                     clientChangeUserName(inputC);
                 } else if (inputC.equals("QUIT#")) {
+                    System.out.println(inputC +" ---- THIS IS THE QUIT CMD AND GETTING A UNIQUE IDENTIFIER "+ clientName );
                     String exitString;
                     exitString = inputC.replace("QUIT#", "Logged off%");
                     server.handle(clientName, exitString);
                     server.getClients().remove(this);
-                    inStream.close();
-                    streamOut.close();
-                    socket.close();
+                    server.sendOnlineUsers();
+                    inStream.close(); ////////////////////// get specific client
+                    streamOut.close(); /////////////////////
+                    socket.close(); ///////////////////////
                     break;
                 } else {
                     server.handle(clientName, inputC);
@@ -60,8 +61,8 @@ public class ChatServerThread extends Thread {
                 System.out.println("GUI LUKKER NED ");
                 e.printStackTrace();
                 try {
-                    socket.close();
-                } catch (IOException e1) {
+                    socket.close(); // ///////////////////
+               } catch (IOException e1) {
                     e1.printStackTrace();
                 }
                 break;
@@ -82,9 +83,7 @@ public class ChatServerThread extends Thread {
             }
         }
         if (nameTaken) {
-            // do something when name is taken
             send("SERVER: username \"" + desiredUserName + "\" is already taken.");
-
         } else {
             this.clientName = desiredUserName;
             server.sendOnlineUsers();
