@@ -13,11 +13,9 @@ public class MsgListener implements Runnable {
     private final ChatClientController clientController;
     private DataInputStream inStream;
 
-
     public MsgListener(ChatClientController clientController) {
         this.inStream = clientController.getInStream();
         this.clientController = clientController;
-
     }
 
     @Override

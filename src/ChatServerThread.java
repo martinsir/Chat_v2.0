@@ -7,18 +7,17 @@ import java.net.Socket;
 
 public class ChatServerThread extends Thread {
 
-    private ChatServer server = null;
+    private ChatServerController server = null;
     private Socket socket = null;
     private DataInputStream inStream = null;
     private DataOutputStream streamOut = null;
     private String clientName;
 
-    public ChatServerThread(ChatServer server, Socket socket) {
+    public ChatServerThread(ChatServerController server, Socket socket) {
 
         this.server = server;
         this.socket = socket;
         this.clientName = String.valueOf(socket.getPort());
-
 
     } // END ChatServerThread
 
@@ -34,7 +33,7 @@ public class ChatServerThread extends Thread {
 
     public void run() {
         System.out.println("Server Thread " + clientName + " running.");
-        while (true) {
+        while (!socket.isClosed()) {
             String inputC;
             try {  // message from client
                 inputC = inStream.readUTF();
@@ -43,7 +42,6 @@ public class ChatServerThread extends Thread {
                 if (inputC.startsWith("username#")) {
                     clientChangeUserName(inputC);
                 } else if (inputC.equals("QUIT#")) {
-                    System.out.println(inputC +" ---- THIS IS THE QUIT CMD AND GETTING A UNIQUE IDENTIFIER "+ clientName );
                     String exitString;
                     exitString = inputC.replace("QUIT#", "Logged off%");
                     server.handle(clientName, exitString);
@@ -91,6 +89,12 @@ public class ChatServerThread extends Thread {
         }
     }
 
+    @Override
+    public String toString() {
+        return "ChatServerThread{" +
+                "clientName='" + clientName + '\'' +
+                '}';
+    }
 
     public String getClientName() {
         return clientName;
@@ -100,5 +104,13 @@ public class ChatServerThread extends Thread {
     public void open() throws IOException {
         inStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+    }
+
+    public ChatServerController getServer() {
+        return server;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 }
