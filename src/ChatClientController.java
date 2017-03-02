@@ -120,7 +120,6 @@ public class ChatClientController implements Initializable {
     } ////////// END connectToServer
 
     public void checker() {
-
         maxChar.setText(writeMessageTextArea.getText().length() + "/ 250");
         if (!usernameButton.isVisible()) {
             maxChar.setVisible(true);
@@ -234,7 +233,6 @@ public class ChatClientController implements Initializable {
     public TextArea getOnlineUsersTextArea() {
         return onlineUsersTextArea;
     }
-
 
     public void setChosenUserName(String chosenUserName) {
         this.chosenUserName = chosenUserName;

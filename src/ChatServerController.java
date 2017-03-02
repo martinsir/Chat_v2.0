@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -42,22 +41,18 @@ public class ChatServerController implements Initializable, Runnable {
     private List<ChatServerThread> clients = new ArrayList<>();
     private ServerSocket serverSocket = null;
     private Thread thread = null;
-    private ChatServerThread chatServerThread;
+    //private ChatServerThread chatServerThread;
     private boolean connected = false;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+
         presentationTextAreaServer.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 onlineUsersServer();
-                try {
-                    kickButton();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
@@ -153,4 +148,5 @@ public class ChatServerController implements Initializable, Runnable {
     public void comboBoxClients() {
         sendOnlineUsers();
     }
+
 }

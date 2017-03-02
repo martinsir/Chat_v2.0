@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * Created by Martin H on 25-02-2017.
@@ -33,6 +34,10 @@ public class HeartbeatMessage extends Thread {
                     e1.printStackTrace();
                 }
             }
+        }
+
+        if (this.clientController.getSocket().isClosed()) {
+            Optional.ofNullable(this.clientController);
         }
     } // END run
 

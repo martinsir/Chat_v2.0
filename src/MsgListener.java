@@ -56,7 +56,7 @@ public class MsgListener implements Runnable {
             System.out.println("Caught it c2");
             e.printStackTrace();
             try {
-                System.out.println("msglistener shutting down");   // kill thread?
+                System.out.println("msglistener shutting down");
                 this.clientController.getSocket().close();
                 System.exit(0);
             } catch (IOException e1) {
