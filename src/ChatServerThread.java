@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Created by Martin H on 22-02-2017.
@@ -66,7 +67,6 @@ public class ChatServerThread extends Thread {
                 }
                 break;
             }
-
         }//END while
 
     }// END run
@@ -99,9 +99,7 @@ public class ChatServerThread extends Thread {
 
     @Override
     public String toString() {
-        return "ChatServerThread{" +
-                "clientName='" + clientName + '\'' +
-                '}';
+        return  clientName;
     }
 
     public String getClientName() {

@@ -120,6 +120,7 @@ public class ChatClientController implements Initializable {
     } ////////// END connectToServer
 
     public void checker() {
+
         maxChar.setText(writeMessageTextArea.getText().length() + "/ 250");
         if (!usernameButton.isVisible()) {
             maxChar.setVisible(true);

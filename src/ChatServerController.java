@@ -1,4 +1,6 @@
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,8 +49,14 @@ public class ChatServerController implements Initializable, Runnable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        comboBoxClients.valueProperty().addListener(new ChangeListener<ChatServerThread>() {
+            @Override
+            public void changed(ObservableValue<? extends ChatServerThread> observable, ChatServerThread oldValue, ChatServerThread newValue) {
+                comboBoxClients();
+            }
+        });
     }
+
 
     public void startServer() {
 
@@ -69,7 +77,8 @@ public class ChatServerController implements Initializable, Runnable {
 
     @Override
     public void run() {
-        while (thread != null) {
+
+        while (connected == true) {
 
             try {
                 sendOnlineUsers();
@@ -78,7 +87,6 @@ public class ChatServerController implements Initializable, Runnable {
                 addClient(serverSocket.accept());
             } catch (IOException ioe) {
                 System.err.println("Server/client link failed " + ioe.getMessage());
-
             }
         } // END while
     }
@@ -112,9 +120,7 @@ public class ChatServerController implements Initializable, Runnable {
             client.send(clientList);
         }
         onlineUsersTextAreaServer.setText(clientList);
-
     }
-
 
     public synchronized void handle(String id, String input) {
         for (ChatServerThread client : clients) {
@@ -128,21 +134,18 @@ public class ChatServerController implements Initializable, Runnable {
     }
 
     public void kickButton(ActionEvent actionEvent) throws Exception {
-        comboBoxClients.getValue().getServer().getClients().remove(this);
-        System.out.println(comboBoxClients.getValue().getServer().getClients().remove("this is removed "+this));
-        comboBoxClients.getValue().getSocket().close();
-        sendOnlineUsers();
+        comboBoxClients.getValue().getSocket().close(); // should not be used?
+        comboBoxClients.getItems().remove(comboBoxClients.getValue());
+        comboBoxClients.getValue().getServer().handle(comboBoxClients.getValue().getClientName(),"QUIT#");
+
     }
 
     public void presentationTextAreaServer(MouseEvent mouseEvent) {
-                comboBoxClients.getItems().clear();
-        comboBoxClients.getItems().addAll(clients);
+    }
+
+    public void comboBoxClients() {
         sendOnlineUsers();
     }
 
-    public void comboBoxClients(ActionEvent actionEvent) {
-        comboBoxClients.getItems().clear();
-        comboBoxClients.getItems().addAll(clients);
-        sendOnlineUsers();
-    }
+
 }
