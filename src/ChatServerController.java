@@ -4,7 +4,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,8 +25,6 @@ public class ChatServerController implements Initializable, Runnable {
     private Button startServer;
     @FXML
     private ComboBox<ChatServerThread> comboBoxClients;
-    @FXML
-    private TextField port;
     @FXML
     private TextArea presentationTextAreaServer;
     @FXML
@@ -71,16 +71,14 @@ public class ChatServerController implements Initializable, Runnable {
 
     @Override
     public void run() {
-
         while (connected == true) {
-
             try {
                 sendOnlineUsers();
                 presentationTextAreaServer.appendText("Server started \n" + serverSocket + "\n");
                 presentationTextAreaServer.appendText("Waiting for client...\n");
                 addClient(serverSocket.accept());
             } catch (IOException ioe) {
-                System.err.println("Server/client link failed " + ioe.getMessage());
+                ioe.printStackTrace();
             }
         } // END while
     }
@@ -94,7 +92,6 @@ public class ChatServerController implements Initializable, Runnable {
             serverThread.start();
 
         } catch (IOException ioe) {
-            System.out.println("Thread ERR: ");
             ioe.printStackTrace();
             System.exit(-1);
         }

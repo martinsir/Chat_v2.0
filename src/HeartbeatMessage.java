@@ -15,7 +15,6 @@ public class HeartbeatMessage extends Thread {
     }
 
     public void run() {
-
         while (this.clientController.getSocket().isConnected()) {
             String formatDateTime = dateTime();
             try {

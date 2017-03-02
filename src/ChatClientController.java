@@ -89,10 +89,8 @@ public class ChatClientController implements Initializable {
 
 
     public void connectToServer() {
-        System.out.println("Connecting. Please wait...");
         try {
             socket = new Socket(host.getText(), Integer.parseInt(port.getText()));
-            System.out.println("Connected: " + socket);
             streamOut = new DataOutputStream(socket.getOutputStream());
             inStream = new DataInputStream(socket.getInputStream());
             MsgListener listener = new MsgListener(this);
@@ -103,9 +101,9 @@ public class ChatClientController implements Initializable {
             t1.start();
             connectedUI();
         } catch (UnknownHostException uhe) {
-            System.err.println("Unknown Host : " + uhe.getMessage());
+            uhe.printStackTrace();
         } catch (IOException ioe) {
-            System.err.println("ERR: " + ioe.getMessage());
+            ioe.printStackTrace();
         }
         if (!connect.isVisible()) {
             usernameButton.setVisible(true);
@@ -174,9 +172,8 @@ public class ChatClientController implements Initializable {
 
     public void usernameButton() throws IOException {
         usernameAlert.setVisible(false);
-        if (usernameTxtField.getText().matches("^[a-zA-Z0-9_-]+$")  &&usernameTxtField.getText().length()<=12 ) {
+        if (usernameTxtField.getText().matches("^[a-zA-Z0-9_-]+$") && usernameTxtField.getText().length() <= 12) {
             setNameTaken(false);
-            System.out.println("NAMETAKEN CONTROLLER");
             streamOut.writeUTF("username#" + usernameTxtField.getText());
             streamOut.flush();
             usernameButton.setDisable(true);
@@ -191,11 +188,9 @@ public class ChatClientController implements Initializable {
                 usernameTxtField.setVisible(true);
                 presentationTextArea.appendText("Please choose another username.\n");
                 usernameButton.setDisable(false);
-                System.out.println("nametaken true");
 
             } else if (getNameTaken() == false) {
 
-                System.out.println("nametaken false");
                 usernameButton.setVisible(false);
                 usernameTxtField.setVisible(false);
                 writeMessageTextArea.setVisible(true);
@@ -206,7 +201,7 @@ public class ChatClientController implements Initializable {
                         + usernameTxtField.getText() + "\n");
                 setChosenUserName(usernameTxtField.getText());
             }
-        }else{
+        } else {
             usernameAlert.setVisible(true);
             usernameAlert.setText("Max 12 chars, digits, ‘-‘ and ‘_’ allowed.");
         }

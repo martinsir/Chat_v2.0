@@ -47,19 +47,16 @@ public class MsgListener implements Runnable {
                         clientController.getPresentationTextArea().appendText(formatDateTime + "  " + msg + "\n");
                     }
                 } catch (EOFException e) {
-                    System.out.println("Caught it ! c1 ");
                     e.printStackTrace();
                     System.exit(0);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Caught it c2");
             e.printStackTrace();
             try {
                 this.clientController.getSocket().close();
                 System.exit(0);
             } catch (IOException e1) {
-                System.out.println("Caught it c3 inner try ");
                 e1.printStackTrace();
             }
         }

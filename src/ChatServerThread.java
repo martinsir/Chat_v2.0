@@ -29,12 +29,11 @@ public class ChatServerThread extends Thread {
             streamOut.writeUTF(message);
             streamOut.flush();
         } catch (IOException ioe) {
-            System.err.println(clientName + "ERR sending: " + ioe.getMessage());
+            ioe.printStackTrace();
         }
     } // END send()
 
     public void run() {
-        System.out.println("Server Thread " + clientName + " running.");
         while (!socket.isClosed()) {
             String inputC;
             try {  // message from client
@@ -57,7 +56,6 @@ public class ChatServerThread extends Thread {
                     streamOut.flush();
                 }
             } catch (IOException e) {
-                System.out.println("GUI SHUTTING DOWN");
                 e.printStackTrace();
                 try {
                     socket.close();
@@ -73,26 +71,17 @@ public class ChatServerThread extends Thread {
     public void clientChangeUserName(String input) {
         nameTaken = false;
         String desiredUserName = input.replace("username#", "");
-        System.out.println("desired name entered");
-
         for (ChatServerThread client : server.getClients()) {
-            System.out.println("running for each name ");
             if (client.getClientName().equalsIgnoreCase(desiredUserName)) {
-                System.out.println(" names getting compared ");
                 nameTaken = true;
-                System.out.println("name sat to taken ");
-
             }
         }
         if (nameTaken == true) {
-            System.out.println("name is taken ");
             send("SERVER: username \"" + desiredUserName + "\" is already taken.");
         }
         if (nameTaken == false) {
-            System.out.println("name is not taken ");
             clientName = desiredUserName;
             server.sendOnlineUsers();
-            System.out.println("Client is now known as " + clientName);
         }
     }
 
