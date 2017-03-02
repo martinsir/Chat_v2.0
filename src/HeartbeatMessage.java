@@ -7,8 +7,6 @@ import java.util.Optional;
  * Created by Martin H on 25-02-2017.
  */
 
-/// Remember the Server GUI
-
 public class HeartbeatMessage extends Thread {
     private final ChatClientController clientController;
 
@@ -26,7 +24,7 @@ public class HeartbeatMessage extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();               ///// Kill thread - it's still sending on a closed socket
+                e.printStackTrace();
                 try {
                     this.clientController.getSocket().close();
                     break;
@@ -35,7 +33,6 @@ public class HeartbeatMessage extends Thread {
                 }
             }
         }
-
         if (this.clientController.getSocket().isClosed()) {
             Optional.ofNullable(this.clientController);
         }

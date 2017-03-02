@@ -142,7 +142,12 @@ public class ChatServerController implements Initializable, Runnable {
     }
 
     public void kickButton() throws Exception {
+        //boolean isMyComboBoxEmpty = myComboBox.getSelectionModel().isEmpty();
+        if (!comboBoxClients.getSelectionModel().isEmpty())
         comboBoxClients.getValue().getSocket().close();
+        //comboBoxClients.getItems().remove(comboBoxClients.getValue().getServer().getClients().remove(1));
+        comboBoxClients.getValue().getServer().getClients().remove(comboBoxClients.getValue());
+        onlineUsersServer();
     }
 
     public void comboBoxClients() {
