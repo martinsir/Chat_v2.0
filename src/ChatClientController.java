@@ -172,7 +172,6 @@ public class ChatClientController implements Initializable {
         }
     }
 
-
     public void usernameButton() throws IOException {
         setNameTaken(false);
         System.out.println("NAMETAKEN CONTROLLER");

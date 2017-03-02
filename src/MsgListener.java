@@ -34,7 +34,6 @@ public class MsgListener implements Runnable {
                     if (msg.contains("Logged off%")) {
                         msg = msg.substring(msg.indexOf("#") + 1);
                         msg = msg.replace("%", "");
-                        System.out.println("Do nothing for the love of motherboard"); // stupid method
                     }
                     if (msg.contains("SERVER: username")) {
                         clientController.setNameTaken(true);
@@ -50,7 +49,6 @@ public class MsgListener implements Runnable {
                 } catch (EOFException e) {
                     System.out.println("Caught it ! c1 ");
                     e.printStackTrace();
-//                    this.clientController.getSocket().close(); ////  ------------- don't
                     System.exit(0);
                 }
             }

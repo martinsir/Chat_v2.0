@@ -39,7 +39,6 @@ public class ChatServerController implements Initializable, Runnable {
         Platform.exit();
     }
 
-
     private List<ChatServerThread> clients = new ArrayList<>();
     private ServerSocket serverSocket = null;
     private Thread thread = null;
@@ -49,14 +48,15 @@ public class ChatServerController implements Initializable, Runnable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        comboBoxClients.valueProperty().addListener(new ChangeListener<ChatServerThread>() {
+
+        presentationTextAreaServer.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends ChatServerThread> observable, ChatServerThread oldValue, ChatServerThread newValue) {
-                comboBoxClients();
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                onlineUsersServer();
             }
         });
-    }
 
+    }
 
     public void startServer() {
 
@@ -98,8 +98,6 @@ public class ChatServerController implements Initializable, Runnable {
         try {
             serverThread.open();
             serverThread.start();
-            comboBoxClients.getItems().clear();
-            comboBoxClients.getItems().addAll(clients);
 
         } catch (IOException ioe) {
             System.out.println("Thread ERR: ");
@@ -122,6 +120,17 @@ public class ChatServerController implements Initializable, Runnable {
         onlineUsersTextAreaServer.setText(clientList);
     }
 
+    public void onlineUsersServer(){
+        String clientList = "online#";
+        for (ChatServerThread client : clients) {
+            clientList += client.getClientName() + "\n";
+        }
+        comboBoxClients.getItems().clear();
+        comboBoxClients.getItems().addAll(clients);
+        onlineUsersTextAreaServer.setText(clientList);
+    }
+
+
     public synchronized void handle(String id, String input) {
         for (ChatServerThread client : clients) {
             client.send(id + ": " + input);
@@ -133,19 +142,11 @@ public class ChatServerController implements Initializable, Runnable {
         return clients;
     }
 
-    public void kickButton(ActionEvent actionEvent) throws Exception {
-        comboBoxClients.getValue().getSocket().close(); // should not be used?
-        comboBoxClients.getItems().remove(comboBoxClients.getValue());
+    public void kickButton() throws Exception {
         comboBoxClients.getValue().getServer().handle(comboBoxClients.getValue().getClientName(),"QUIT#");
-
-    }
-
-    public void presentationTextAreaServer(MouseEvent mouseEvent) {
     }
 
     public void comboBoxClients() {
         sendOnlineUsers();
     }
-
-
 }

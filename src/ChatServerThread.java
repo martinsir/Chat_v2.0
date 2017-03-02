@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * Created by Martin H on 22-02-2017.
@@ -44,6 +43,7 @@ public class ChatServerThread extends Thread {
                 if (inputC.startsWith("username#")) {
                     clientChangeUserName(inputC);
                 } else if (inputC.equals("QUIT#")) {
+                    System.out.println("this is the input from: "+ inputC);
                     String exitString;
                     exitString = inputC.replace("QUIT#", "Logged off%");
                     server.handle(clientName, exitString);
