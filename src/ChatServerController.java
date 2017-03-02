@@ -53,9 +53,13 @@ public class ChatServerController implements Initializable, Runnable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 onlineUsersServer();
+                try {
+                    kickButton();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
-
     }
 
     public void startServer() {
@@ -143,7 +147,7 @@ public class ChatServerController implements Initializable, Runnable {
     }
 
     public void kickButton() throws Exception {
-        comboBoxClients.getValue().getServer().handle(comboBoxClients.getValue().getClientName(),"QUIT#");
+        comboBoxClients.getValue().getSocket().close();
     }
 
     public void comboBoxClients() {
