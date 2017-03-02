@@ -24,6 +24,7 @@ public class ChatServerGUI extends Application {
         System.out.println("Stage is closing");
         System.exit(0);
     }
+
     public static void main(String[] args) {
         launch(args);
     }

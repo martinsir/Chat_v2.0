@@ -32,7 +32,6 @@ public class ChatClientController implements Initializable {
     private int maxCharPressed = 250;
     private String chosenUserName;
 
-
     @FXML
     private TextArea writeMessageTextArea;
     @FXML
@@ -61,7 +60,8 @@ public class ChatClientController implements Initializable {
     private Label maxChar;
     @FXML
     private Label charLeft;
-
+    @FXML
+    private Label usernameAlert;
 
     @FXML
     public void exitApplication(ActionEvent event) {
@@ -86,6 +86,7 @@ public class ChatClientController implements Initializable {
         logout.setVisible(false);
         connect.setVisible(true);
     }
+
 
     public void connectToServer() {
         System.out.println("Connecting. Please wait...");
@@ -117,7 +118,7 @@ public class ChatClientController implements Initializable {
             jLport.setVisible(false);
             checker();
         }
-    } ////////// END connectToServer
+    } // END connectToServer
 
     public void checker() {
         maxChar.setText(writeMessageTextArea.getText().length() + "/ 250");
@@ -172,39 +173,44 @@ public class ChatClientController implements Initializable {
     }
 
     public void usernameButton() throws IOException {
-        setNameTaken(false);
-        System.out.println("NAMETAKEN CONTROLLER");
-        streamOut.writeUTF("username#" + usernameTxtField.getText());
-        streamOut.flush();
-        usernameButton.setDisable(true);
+        usernameAlert.setVisible(false);
+        if (usernameTxtField.getText().matches("^[a-zA-Z0-9_-]+$")  &&usernameTxtField.getText().length()<=12 ) {
+            setNameTaken(false);
+            System.out.println("NAMETAKEN CONTROLLER");
+            streamOut.writeUTF("username#" + usernameTxtField.getText());
+            streamOut.flush();
+            usernameButton.setDisable(true);
 
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (getNameTaken() == true) {
-            usernameButton.setVisible(true);
-            usernameTxtField.setVisible(true);
-            presentationTextArea.appendText("Please choose another username.\n");
-            usernameButton.setDisable(false);
-            System.out.println("nametaken true");
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (getNameTaken() == true) {
+                usernameButton.setVisible(true);
+                usernameTxtField.setVisible(true);
+                presentationTextArea.appendText("Please choose another username.\n");
+                usernameButton.setDisable(false);
+                System.out.println("nametaken true");
 
-        } else if (getNameTaken()==false) {
+            } else if (getNameTaken() == false) {
 
-            System.out.println("nametaken false");
-            usernameButton.setVisible(false);
-            usernameTxtField.setVisible(false);
-            writeMessageTextArea.setVisible(true);
-            sendMessage.setVisible(true);
-            maxChar.setVisible(true);
-            charLeft.setVisible(true);
-            getPresentationTextArea().appendText("Link: Success!\nWelcome to the chat "
-                    + usernameTxtField.getText() + "\n");
-            setChosenUserName(usernameTxtField.getText());
+                System.out.println("nametaken false");
+                usernameButton.setVisible(false);
+                usernameTxtField.setVisible(false);
+                writeMessageTextArea.setVisible(true);
+                sendMessage.setVisible(true);
+                maxChar.setVisible(true);
+                charLeft.setVisible(true);
+                getPresentationTextArea().appendText("Link: Success!\nWelcome to the chat "
+                        + usernameTxtField.getText() + "\n");
+                setChosenUserName(usernameTxtField.getText());
+            }
+        }else{
+            usernameAlert.setVisible(true);
+            usernameAlert.setText("Max 12 chars, digits, ‘-‘ and ‘_’ allowed.");
         }
     }
-
 
     public boolean getNameTaken() {
         return nameTaken;
@@ -237,5 +243,4 @@ public class ChatClientController implements Initializable {
     public void setChosenUserName(String chosenUserName) {
         this.chosenUserName = chosenUserName;
     }
-
 }

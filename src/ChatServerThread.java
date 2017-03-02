@@ -48,9 +48,9 @@ public class ChatServerThread extends Thread {
                     server.handle(clientName, exitString);
                     server.getClients().remove(this);
                     server.sendOnlineUsers();
-                    inStream.close(); ////////////////////// get specific client
-                    streamOut.close(); /////////////////////
-                    socket.close(); ///////////////////////
+                    inStream.close();
+                    streamOut.close();
+                    socket.close();
                     break;
                 } else {
                     server.handle(clientName, inputC);
@@ -60,7 +60,7 @@ public class ChatServerThread extends Thread {
                 System.out.println("GUI SHUTTING DOWN");
                 e.printStackTrace();
                 try {
-                    socket.close(); // ///////////////////
+                    socket.close();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -71,7 +71,7 @@ public class ChatServerThread extends Thread {
     }// END run
 
     public void clientChangeUserName(String input) {
-        nameTaken=false;
+        nameTaken = false;
         String desiredUserName = input.replace("username#", "");
         System.out.println("desired name entered");
 
@@ -98,7 +98,7 @@ public class ChatServerThread extends Thread {
 
     @Override
     public String toString() {
-        return  clientName;
+        return clientName;
     }
 
     public String getClientName() {

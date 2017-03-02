@@ -4,10 +4,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -41,13 +38,11 @@ public class ChatServerController implements Initializable, Runnable {
     private List<ChatServerThread> clients = new ArrayList<>();
     private ServerSocket serverSocket = null;
     private Thread thread = null;
-    //private ChatServerThread chatServerThread;
     private boolean connected = false;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
 
         presentationTextAreaServer.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -119,7 +114,7 @@ public class ChatServerController implements Initializable, Runnable {
         onlineUsersTextAreaServer.setText(clientList);
     }
 
-    public void onlineUsersServer(){
+    public void onlineUsersServer() {
         String clientList = "online#";
         for (ChatServerThread client : clients) {
             clientList += client.getClientName() + "\n";
@@ -142,10 +137,8 @@ public class ChatServerController implements Initializable, Runnable {
     }
 
     public void kickButton() throws Exception {
-        //boolean isMyComboBoxEmpty = myComboBox.getSelectionModel().isEmpty();
         if (!comboBoxClients.getSelectionModel().isEmpty())
-        comboBoxClients.getValue().getSocket().close();
-        //comboBoxClients.getItems().remove(comboBoxClients.getValue().getServer().getClients().remove(1));
+            comboBoxClients.getValue().getSocket().close();
         comboBoxClients.getValue().getServer().getClients().remove(comboBoxClients.getValue());
         onlineUsersServer();
     }
@@ -153,5 +146,4 @@ public class ChatServerController implements Initializable, Runnable {
     public void comboBoxClients() {
         sendOnlineUsers();
     }
-
 }

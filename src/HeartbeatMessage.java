@@ -13,6 +13,7 @@ public class HeartbeatMessage extends Thread {
     public HeartbeatMessage(ChatClientController clientController) throws IOException {
         this.clientController = clientController;
     }
+
     public void run() {
 
         while (this.clientController.getSocket().isConnected()) {
@@ -20,7 +21,7 @@ public class HeartbeatMessage extends Thread {
             try {
                 clientController.getStreamOut().writeUTF(formatDateTime + " " + "Sending a HeartBeat#");
                 clientController.getStreamOut().flush();
-                sleep(10000);
+                sleep(60000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (IOException e) {
