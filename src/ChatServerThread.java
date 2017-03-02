@@ -12,6 +12,8 @@ public class ChatServerThread extends Thread {
     private DataInputStream inStream = null;
     private DataOutputStream streamOut = null;
     private String clientName;
+    boolean nameTaken;
+
 
     public ChatServerThread(ChatServerController server, Socket socket) {
 
@@ -38,7 +40,6 @@ public class ChatServerThread extends Thread {
             try {  // message from client
                 inputC = inStream.readUTF();
                 // check if its a command
-
                 if (inputC.startsWith("username#")) {
                     clientChangeUserName(inputC);
                 } else if (inputC.equals("QUIT#")) {
@@ -56,7 +57,7 @@ public class ChatServerThread extends Thread {
                     streamOut.flush();
                 }
             } catch (IOException e) {
-                System.out.println("GUI LUKKER NED ");
+                System.out.println("GUI SHUTTING DOWN");
                 e.printStackTrace();
                 try {
                     socket.close(); // ///////////////////
@@ -68,22 +69,29 @@ public class ChatServerThread extends Thread {
 
         }//END while
 
-
     }// END run
 
     public void clientChangeUserName(String input) {
-        boolean nameTaken = false;
+        nameTaken=false;
         String desiredUserName = input.replace("username#", "");
+        System.out.println("desired name entered");
 
         for (ChatServerThread client : server.getClients()) {
+            System.out.println("running for each name ");
             if (client.getClientName().equalsIgnoreCase(desiredUserName)) {
+                System.out.println(" names getting compared ");
                 nameTaken = true;
+                System.out.println("name sat to taken ");
+
             }
         }
-        if (nameTaken) {
+        if (nameTaken == true) {
+            System.out.println("name is taken ");
             send("SERVER: username \"" + desiredUserName + "\" is already taken.");
-        } else {
-            this.clientName = desiredUserName;
+        }
+        if (nameTaken == false) {
+            System.out.println("name is not taken ");
+            clientName = desiredUserName;
             server.sendOnlineUsers();
             System.out.println("Client is now known as " + clientName);
         }

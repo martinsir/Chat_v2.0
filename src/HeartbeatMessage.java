@@ -14,7 +14,6 @@ public class HeartbeatMessage extends Thread {
     public HeartbeatMessage(ChatClientController clientController) throws IOException {
         this.clientController = clientController;
     }
-
     public void run() {
 
         while (this.clientController.getSocket().isConnected()) {

@@ -28,7 +28,7 @@ public class ChatClientController implements Initializable {
     private Socket socket = null;
     private DataInputStream inStream = null;
     private DataOutputStream streamOut = null;
-    private boolean nameTaken = false;
+    private boolean nameTaken;
     private int maxCharPressed = 250;
     private String chosenUserName;
 
@@ -173,6 +173,8 @@ public class ChatClientController implements Initializable {
 
 
     public void usernameButton() throws IOException {
+        setNameTaken(false);
+        System.out.println("NAMETAKEN CONTROLLER");
         streamOut.writeUTF("username#" + usernameTxtField.getText());
         streamOut.flush();
         usernameButton.setDisable(true);
@@ -189,7 +191,8 @@ public class ChatClientController implements Initializable {
             usernameButton.setDisable(false);
             System.out.println("nametaken true");
 
-        } else if (getNameTaken() == false) {
+        } else if (getNameTaken()==false) {
+
             System.out.println("nametaken false");
             usernameButton.setVisible(false);
             usernameTxtField.setVisible(false);
@@ -236,4 +239,5 @@ public class ChatClientController implements Initializable {
     public void setChosenUserName(String chosenUserName) {
         this.chosenUserName = chosenUserName;
     }
+
 }

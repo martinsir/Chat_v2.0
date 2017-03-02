@@ -113,9 +113,8 @@ public class ChatServerController implements Initializable, Runnable {
         }
         onlineUsersTextAreaServer.setText(clientList);
 
-        comboBoxClients.getItems().clear();
-        comboBoxClients.getItems().addAll(clients);
     }
+
 
     public synchronized void handle(String id, String input) {
         for (ChatServerThread client : clients) {
@@ -128,15 +127,22 @@ public class ChatServerController implements Initializable, Runnable {
         return clients;
     }
 
-    public void kickButton(ActionEvent actionEvent) throws IOException, InterruptedException, Exception {
+    public void kickButton(ActionEvent actionEvent) throws Exception {
         comboBoxClients.getValue().getServer().getClients().remove(this);
+        System.out.println(comboBoxClients.getValue().getServer().getClients().remove("this is removed "+this));
         comboBoxClients.getValue().getSocket().close();
+        sendOnlineUsers();
     }
 
     public void presentationTextAreaServer(MouseEvent mouseEvent) {
+                comboBoxClients.getItems().clear();
+        comboBoxClients.getItems().addAll(clients);
+        sendOnlineUsers();
     }
 
     public void comboBoxClients(ActionEvent actionEvent) {
-
+        comboBoxClients.getItems().clear();
+        comboBoxClients.getItems().addAll(clients);
+        sendOnlineUsers();
     }
 }

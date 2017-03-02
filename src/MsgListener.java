@@ -30,18 +30,14 @@ public class MsgListener implements Runnable {
 
                     if (msg.contains("Sending a HeartBeat#")) {
                         msg = msg.substring(msg.indexOf("#") + 1);
-
                     }
                     if (msg.contains("Logged off%")) {
                         msg = msg.substring(msg.indexOf("#") + 1);
                         msg = msg.replace("%", "");
                         System.out.println("Do nothing for the love of motherboard"); // stupid method
-
                     }
                     if (msg.contains("SERVER: username")) {
                         clientController.setNameTaken(true);
-                    } else {
-                        clientController.setNameTaken(false);
                     }
                     //5 1 3 7 4 : online#Martin
                     if (msg.contains("online#")) {
@@ -54,7 +50,7 @@ public class MsgListener implements Runnable {
                 } catch (EOFException e) {
                     System.out.println("Caught it ! c1 ");
                     e.printStackTrace();
-                    this.clientController.getSocket().close(); ////  ------------- don't
+//                    this.clientController.getSocket().close(); ////  ------------- don't
                     System.exit(0);
                 }
             }
